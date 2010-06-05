@@ -12,8 +12,7 @@
 # kicker, hosting, tastyspleen.tv, etc...
 #
 # TODO: - Allow for choosing cleancode over aprq2's DLL
-#       - Get all of the downloaded files on tastyspleen.tv
-#         instead of omploader O.o
+#
 
 ### This script must be run in a terminal.
 [ -t 0 ] || exit 1
@@ -110,8 +109,12 @@ fi
 
 function PatchHTTP {
 cd /tmp/aprq2/trunk
-wget "http://omploader.org/vNGZ4Ng/httpfix.zip"
-unzip -o httpfix.zip
+wget "http://github.com/squarehimself/q2kicker/raw/master/files.patch"
+wget "http://github.com/squarehimself/q2kicker/raw/master/cl_http.patch"
+patch -p1 < files.patch
+patch -p1 < cl_http.patch
+cd /tmp/aprq2/trunk/qcommon
+wget "http://github.com/squarehimself/q2kicker/raw/master/files.h"
 }
 
 function ExtraFiles {
@@ -147,7 +150,7 @@ select choice in $YNUn; do
 	elif [ "$choice" = "Yes" ]; then
 		echo "==> Patching for libpng14"
 		cd /tmp/aprq2/trunk
-		wget "http://omploader.org/vNGgzMQ/pngpatch.patch"
+		wget "http://github.com/squarehimself/q2kicker/raw/master/pngpatch.patch"
 		patch -p0 < pngpatch.patch
 		return
 	else
@@ -168,7 +171,7 @@ select choice in $YesNoU; do
 	elif [ "$choice" = "Yes" ]; then
 		echo "==> Patching for libjpeg8"
 		cd /tmp/aprq2/trunk
-		wget "http://omploader.org/vNGgzMg/jpegpatch.patch"
+		wget "http://github.com/squarehimself/q2kicker/raw/master/jpegpatch.patch"
 		patch -p0 < jpegpatch.patch
 		return
 	else
