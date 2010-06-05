@@ -1,0 +1,14 @@
+--- trunk/qcommon/files.c	2010-06-05 19:04:53.000000000 -0400
++++ oldtrunk/qcommon/files.c	2010-05-29 03:31:23.000000000 -0400
+@@ -93,6 +93,11 @@
+ static cvar_t	*fs_developer = &nullCvar;
+ #ifndef _WIN32
+ static cvar_t	*fs_usehomedir;
++
++qboolean FS_UseHomedir ()
++{
++	return (fs_usehomedir->integer != 0);
++}
+ #endif
+ 
+ static searchpath_t	*fs_searchpaths;

@@ -1,0 +1,29 @@
+--- trunk/client/cl_http.c	2010-06-05 19:04:55.000000000 -0400
++++ oldtrunk/client/cl_http.c	2010-05-29 04:07:22.000000000 -0400
+@@ -282,6 +282,26 @@
+ 	if (!dl->curl)
+ 		dl->curl = curl_easy_init ();
+ 
++#ifndef _WIN32
++	if (FS_UseHomedir())
++	{
++		char gdir[MAX_OSPATH];
++		char *homedir = getenv("HOME");
++
++		if(homedir)
++		{
++			int len = snprintf(gdir,sizeof(gdir),"%s/.quake2/", homedir);
++			if ((len > 0) && (len < sizeof(gdir)) && (gdir[len-1] == '/'))
++				gdir[len-1] = 0;
++
++			char bkUp[256];
++
++			Q_strncpyz(bkUp, escapedFilePath + strlen(gdir), sizeof(bkUp) - strlen(gdir));
++			Q_strncpyz(escapedFilePath, bkUp, sizeof(bkUp));
++		}
++	}
++#endif
++
+ 	Com_sprintf (dl->URL, sizeof(dl->URL), "%s%s", cls.downloadServer, escapedFilePath);
+ 
+ 	curl_easy_setopt (dl->curl, CURLOPT_ENCODING, "");
