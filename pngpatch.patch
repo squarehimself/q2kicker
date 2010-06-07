@@ -5,7 +5,7 @@
  		return;
  
 -	if ((png_check_sig(PngFileBuffer.Buffer, 8)) == 0) {
-+	if ((png_sig_cmp(PngFileBuffer.Buffer, 0, 8)) == 0) {
++	if ((png_sig_cmp(PngFileBuffer.Buffer, 0, 8) == 0) == 0) {
  		Com_Printf ("LoadPNG: Not a PNG file: %s\n", filename);
  		FS_FreeFile (PngFileBuffer.Buffer); 
  		return;
