@@ -71,29 +71,29 @@ make
 if [ -e "/tmp/aprq2/trunk/releasei386/aq2" ]; then
 	echo "==> Build was successful."
 	echo "==> Installing binary as /usr/bin/quake2"
-	mkdir -p ~/.quake2/baseq2
-	mv /tmp/aprq2/trunk/releasei386/aq2 ~/.quake2
+	mkdir -p /home/$USER/.quake2/baseq2
+	mv /tmp/aprq2/trunk/releasei386/aq2 /home/$USER/.quake2
 
 	if [ '$UID' == '0' ]; then
-		echo "#\!/bin/sh\nexec ~/.quake2/aq2 +set basedir ~/.quake2 \$*" > /usr/bin/quake2
+		echo "#\!/bin/sh\nexec /home/\$USER/.quake2/aq2 +set basedir /home/\$USER/.quake2 \$*" > /usr/bin/quake2
 		chmod +x /usr/bin/quake2
 	else
 		echo "==> Need root for this..."
 
 		if [ -x `which sudo` ]; then
 			echo "==> Found sudo. Invokes twice to create, then make executable."
-			echo "exec ~/.quake2/aq2 +set basedir ~/.quake2 \$*" | sudo tee -a /usr/bin/quake2 && sudo chmod +x /usr/bin/quake2
+			echo "exec /home/\$USER/.quake2/aq2 +set basedir /home/\$USER/.quake2 \$*" | sudo tee -a /usr/bin/quake2 && sudo chmod +x /usr/bin/quake2
 			sudo -k
 		else
 			"==> Using su."
-			su -c 'echo "exec ~/.quake2/aq2 +set basedir ~/.quake2 \$*" > /usr/bin/quake2 && chmod +x /usr/bin/quake2'
+			su -c 'echo "exec /home/\$USER/.quake2/aq2 +set basedir /home/\$USER/.quake2 \$*" > /usr/bin/quake2 && chmod +x /usr/bin/quake2'
 		fi
 
 	fi
 
 	if [ -e "/usr/bin/quake2" ]; then
 		echo "==> Binary installed."
-		mv /tmp/aprq2/trunk/releasei386/gamei386.so ~/.quake2/baseq2
+		mv /tmp/aprq2/trunk/releasei386/gamei386.so /home/$USER/.quake2/baseq2
 	else 
 		echo "==> Had trouble installing the binary. :("
 		exit 1
@@ -127,12 +127,12 @@ select choice in $YESORNO; do
 		echo
 		echo "==> Extracting and stuff..."
 		unzip q2kicker_current.zip
-		mv /tmp/aprq2/baseq2/* ~/.quake2/baseq2
-		mv /tmp/aprq2/NEW\ PLAYERS\ READ\ THIS.txt ~/.quake2
-		rm ~/.quake2/baseq2/gamex86.dll
+		mv /tmp/aprq2/q2kicker/baseq2/* /home/$USER/.quake2/baseq2
+		mv /tmp/aprq2/q2kicker/NEW\ PLAYERS\ READ\ THIS.txt /home/$USER/.quake2
+		rm /home/$USER/.quake2/baseq2/gamex86.dll
 		return
 	else
-		cd ~/.quake2
+		cd /home/$USER/.quake2
 		wget "http://tastyspleen.tv/q2k/q2kicker/NEW%20PLAYERS%20READ%20THIS.txt"
 		return
 	fi
