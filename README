@@ -1,4 +1,8 @@
-You should know ahead of time that this script is merely to assist
+First note: You only need the script if you are going to use the
+script to help you get started. The script will automagically grab
+the patches as it needs them.
+
+Second, you should know ahead of time that this script is merely to assist
 in the process of installing the quake2 kicker package, which means
 jdolan's aprq2 and Jehar's kicker package that has all of the data.
 This is in no way, shape, or form a substitute for intelligence and
