@@ -74,7 +74,7 @@ if [ -e "/tmp/aprq2/trunk/releasei386/aq2" ]; then
 	mkdir -p ~/.quake2/baseq2
 	mv /tmp/aprq2/trunk/releasei386/aq2 ~/.quake2
 
-	if [ -w `which ls` ]; then
+	if [ '$UID' == '0' ]; then
 		echo "#\!/bin/sh\nexec ~/.quake2/aq2 +set basedir ~/.quake2 \$*" > /usr/bin/quake2
 		chmod +x /usr/bin/quake2
 	else
