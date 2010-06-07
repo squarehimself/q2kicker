@@ -81,8 +81,8 @@ if [ -e "/tmp/aprq2/trunk/releasei386/aq2" ]; then
 		echo "==> Need root for this..."
 
 		if [ -x `which sudo` ]; then
-			echo "==> Found sudo."
-			sudo -- echo "exec ~/.quake2/aq2 +set basedir ~/.quake2 \$*" > /usr/bin/quake2 && chmod +x /usr/bin/quake2
+			echo "==> Found sudo. Invokes twice to create, then make executable."
+			echo "exec ~/.quake2/aq2 +set basedir ~/.quake2 \$*" | sudo tee -a /usr/bin/quake2 && sudo chmod +x /usr/bin/quake2
 			sudo -k
 		else
 			"==> Using su."
