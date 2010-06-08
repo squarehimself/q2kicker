@@ -12,17 +12,20 @@
 # kicker, hosting, tastyspleen.tv, etc...
 #
 # TODO: - Allow for choosing cleancode over aprq2's DLL
+#	- Use CleanQ2 instead of AprQ2
 #
 
 ### This script must be run in a terminal.
 [ -t 0 ] || exit 1
 
+tmpdir = '/tmp/aprq2'
+
 ### Let's make some functions for a cleaner procedure later.
 function FetchSources {
-mkdir /tmp/aprq2
-cd /tmp/aprq2
+mkdir $tmpdir
+cd $tmpdir
 svn co svn://jdolan.dyndns.org/aprq2/trunk
-if [ -e '/tmp/aprq2/trunk/Makefile' ]; then
+if [ -e '$tmpdir/trunk/Makefile' ]; then
 	echo "==> Sources acquired."
 else
 	echo "==> Sources were not downloaded. Aborting."
@@ -35,11 +38,11 @@ function MusicOption {
 MUSICP="MPD XMMS No"
 select choice in $MUSICP; do
 	if [ "$choice" = "MPD" ]; then
-		sed -i 's/BUILD_MPD=NO/BUILD_MPD=YES/g' /tmp/aprq2/trunk/Makefile
+		sed -i 's/BUILD_MPD=NO/BUILD_MPD=YES/g' $tmpdir/trunk/Makefile
 		echo "==> Selecting MPD."
 		return
 	elif [ "$choice" = "XMMS" ]; then
-		sed -i 's/BUILD_XMMS=NO/BUILD_XMMS=YES/g' /tmp/aprq2/trunk/Makefile
+		sed -i 's/BUILD_XMMS=NO/BUILD_XMMS=YES/g' $tmpdir/trunk/Makefile
 		echo "==> Selecting XMMS."
 		return
 	else
@@ -56,7 +59,7 @@ select choice in $CHOICES; do
 		echo "==> Enabling OpenAL support."
 		return
 	else
-		sed -i 's/BUILD_OPENAL=YES/BUILD_OPENAL=NO/g' /tmp/aprq2/Makefile
+		sed -i 's/BUILD_OPENAL=YES/BUILD_OPENAL=NO/g' $tmpdir/Makefile
 		echo "==> Not enabling OpenAL."
 		return
 	fi
@@ -64,15 +67,15 @@ done
 }
 
 function MakeBin {
-cd /tmp/aprq2/trunk
+cd $tmpdir/trunk
 make
 
 ### This shit gets messy, but it works.
-if [ -e "/tmp/aprq2/trunk/releasei386/aq2" ]; then
+if [ -e "$tmpdir/trunk/releasei386/aq2" ]; then
 	echo "==> Build was successful."
 	echo "==> Installing binary as /usr/bin/quake2"
 	mkdir -p /home/$USER/.quake2/baseq2
-	mv /tmp/aprq2/trunk/releasei386/aq2 /home/$USER/.quake2
+	mv $tmpdir/trunk/releasei386/aq2 /home/$USER/.quake2
 
 	if [ '$UID' == '0' ]; then
 		echo "#\!/bin/sh\nexec /home/\$USER/.quake2/aq2 +set basedir /home/\$USER/.quake2 \$*" > /usr/bin/quake2
@@ -93,7 +96,8 @@ if [ -e "/tmp/aprq2/trunk/releasei386/aq2" ]; then
 
 	if [ -e "/usr/bin/quake2" ]; then
 		echo "==> Binary installed."
-		mv /tmp/aprq2/trunk/releasei386/gamei386.so /home/$USER/.quake2/baseq2
+		mv $tmpdir/trunk/releasei386/gamei386.so /home/$USER/.quake2/baseq2
+		mv $tmpdir/trunk/baseq2/pics /home/$USER/.quake2/baseq2
 	else 
 		echo "==> Had trouble installing the binary. :("
 		exit 1
@@ -108,12 +112,12 @@ fi
 }
 
 function PatchHTTP {
-cd /tmp/aprq2/trunk
+cd $tmpdir/trunk
 wget "http://github.com/squarehimself/q2kicker/raw/master/files.patch"
 wget "http://github.com/squarehimself/q2kicker/raw/master/cl_http.patch"
 patch -p1 < files.patch
 patch -p1 < cl_http.patch
-cd /tmp/aprq2/trunk/qcommon
+cd $tmpdir/trunk/qcommon
 wget "http://github.com/squarehimself/q2kicker/raw/master/files.h"
 }
 
@@ -122,13 +126,13 @@ YESORNO="Yes No"
 select choice in $YESORNO; do
 	if [ "$choice" = "Yes" ]; then
 		echo "==> Downloading kicker package"
-		cd /tmp/aprq2
+		cd $tmpdir
 		wget "http://tastyspleen.tv/q2k/q2kicker_current.zip"
 		echo
 		echo "==> Extracting and stuff..."
 		unzip q2kicker_current.zip
-		mv /tmp/aprq2/q2kicker/baseq2/* /home/$USER/.quake2/baseq2
-		mv /tmp/aprq2/q2kicker/NEW\ PLAYERS\ READ\ THIS.txt /home/$USER/.quake2
+		mv $tmpdir/q2kicker/baseq2/* /home/$USER/.quake2/baseq2
+		mv $tmpdir/q2kicker/NEW\ PLAYERS\ READ\ THIS.txt /home/$USER/.quake2
 		rm /home/$USER/.quake2/baseq2/gamex86.dll
 		return
 	else
@@ -149,7 +153,7 @@ select choice in $YNUn; do
 		return
 	elif [ "$choice" = "Yes" ]; then
 		echo "==> Patching for libpng14"
-		cd /tmp/aprq2/trunk
+		cd $tmpdir/trunk
 		wget "http://github.com/squarehimself/q2kicker/raw/master/pngpatch.patch"
 		patch -p0 < pngpatch.patch
 		return
@@ -170,7 +174,7 @@ select choice in $YesNoU; do
 		return
 	elif [ "$choice" = "Yes" ]; then
 		echo "==> Patching for libjpeg8"
-		cd /tmp/aprq2/trunk
+		cd $tmpdir/trunk
 		wget "http://github.com/squarehimself/q2kicker/raw/master/jpegpatch.patch"
 		patch -p0 < jpegpatch.patch
 		return
@@ -216,7 +220,7 @@ if [ -e `which svn` ]; then
 	echo
 
 	echo "==> Cleaning up..."
-	rm -rf /tmp/aprq2
+	rm -rf $tmpdir
 	echo """
 If everything was successful, your extra pak files go in ~/.quake2/baseq2
 	and you can run 'quake2' from your run prompt or console.
