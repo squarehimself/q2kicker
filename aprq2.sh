@@ -138,6 +138,9 @@ select choice in $YESORNO; do
 	else
 		cd /home/$USER/.quake2
 		wget "http://tastyspleen.tv/q2k/q2kicker/NEW%20PLAYERS%20READ%20THIS.txt"
+		cd /home/$USER/.quake2/baseq2
+		wget "http://tastyspleen.tv/q2k/q2kicker/baseq2/autoexec.cfg"
+		wget "http://tastyspleen.tv/q2k/q2kicker/baseq2/address.cfg"
 		return
 	fi
 done
