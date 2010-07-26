@@ -25,7 +25,7 @@ function FetchSources {
 mkdir $tmpdir
 cd $tmpdir
 svn co svn://jdolan.dyndns.org/aprq2/trunk
-if [ -e '$tmpdir/trunk/Makefile' ]; then
+if [ -e "$tmpdir/trunk/Makefile" ]; then
 	echo "==> Sources acquired."
 else
 	echo "==> Sources were not downloaded. Aborting."
